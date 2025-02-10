@@ -36,7 +36,7 @@ export async function logout(): Promise<void> {
 }
 
 export async function signup(username: string, password: string): Promise<{ message: string }> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/signup`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -49,7 +49,7 @@ export async function signup(username: string, password: string): Promise<{ mess
 }
 
 export async function resetPassword(username: string, newPassword: string): Promise<{ message: string }> {
-    const res = await fetch("/api/auth/reset-password", {
+    const res = await fetch("/api/login/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, newPassword }),

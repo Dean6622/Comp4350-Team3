@@ -7,7 +7,7 @@ export default function Main() {
 
     return (
         <div>
-            <p className="text-sm text-white text-center">
+            <p className="text-black text-center">
                 <Link href="/auth/login" className="text-center hover:underline">
                     Log in?
                 </Link>

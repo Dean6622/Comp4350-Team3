@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { AuthInput } from "@/components/ui/Input";
+import { AuthButton} from "@/components/ui/Button";
 import { useAuth } from "@/app/contexts/AuthContext";
+
 // @ts-ignore
 import Image from "next/image";
 // @ts-ignore
@@ -49,30 +52,28 @@ export default function LoginPage() {
                     </h1>
 
                     {/* Form */}
-                    <div className="space-y-6 text-black">
-                        <input
+                    <div className="space-y-6">
+                        <AuthInput
                             type="text"
                             placeholder="Name"
                             value={username}
                             onChange={(e) => setUserName(e.target.value)}
                             className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-purple-500"
                         />
-                        <input
+                        <AuthInput
                             type="password"
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border-b border-gray-300 bg-transparent focus:outline-none focus:border-purple-500"
                         />
                     </div>
 
                     {/* Submit Button */}
-                    <button
+                    <AuthButton
                         onClick={handleLogin}
-                        className="w-full bg-customMirage hover:bg-gray-700 text-white py-2 px-4 rounded-lg focus:outline-none focus:ring focus:ring-purple-300"
                     >
                         Log In
-                    </button>
+                    </AuthButton>
 
                     <div className="relative space-y-5">
                         <p className="text-sm text-gray-500 text-center">
