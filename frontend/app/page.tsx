@@ -1,6 +1,5 @@
 "use client";
 
-// @ts-ignore
 import Link from "next/link";
 
 export default function Main() {

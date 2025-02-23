@@ -5,9 +5,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { AuthInput } from "@/components/ui/Input";
 import { AuthButton } from "@/components/ui/Button";
 
-// @ts-ignore
 import Image from "next/image";
-// @ts-ignore
 import Link from "next/link";
 
 export default function ResetPasswordPage() {

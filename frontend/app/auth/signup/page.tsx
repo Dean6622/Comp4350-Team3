@@ -4,10 +4,9 @@ import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { AuthInput } from "@/components/ui/Input";
 import { AuthButton } from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
 
-// @ts-ignore
 import Image from "next/image";
-// @ts-ignore
 import Link from "next/link";
 
 export default function SignupPage() {
@@ -17,6 +16,7 @@ export default function SignupPage() {
     const [username, setUserName] = useState("");
     const [agreed, setAgreed] = useState(false);
     const [message, setMessage] = useState("");
+    const router = useRouter();
 
     const handleSignup = async () => {
         if (!agreed) {
@@ -27,6 +27,7 @@ export default function SignupPage() {
         try {
             const response = await signup(username, password);
             setMessage(response.message);
+            router.push("/auth/login");
 
         } catch (err: unknown) {
             if (err instanceof Error) {
