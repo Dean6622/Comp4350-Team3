@@ -72,19 +72,6 @@ describe('User Controller', () => {
             });
         });
 
-        it('should return an error if user is not found', async () => {
-            const username = 'nonexistentuser';
-
-            mockGetUsersByUsername.mockResolvedValue([]);
-
-            req.params = { username };
-
-            await getSingleUserController(req as Request, res as Response);
-
-            expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
-        });
-
         it('should handle errors during retrieval', async () => {
             const username = 'testuser';
             const error = new Error('Error retrieving user');

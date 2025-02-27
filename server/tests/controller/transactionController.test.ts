@@ -88,6 +88,16 @@ describe('Tag Controller', () => {
             expect(statusMock).toHaveBeenCalledWith(500);
             expect(jsonMock).toHaveBeenCalledWith({ error: 'Database error' });
         });
+
+        it('should return 200 and an empty array when no tags exist', async () => {
+            (getAllTags as jest.Mock).mockResolvedValue([]); // No tags in DB
+    
+            await getAllTagsController(mockReq as Request, mockRes as Response);
+    
+            expect(getAllTags).toHaveBeenCalled();
+            expect(statusMock).toHaveBeenCalledWith(200);
+            expect(jsonMock).toHaveBeenCalledWith({ tags: [] });
+        });
     });
 
     describe('editTagController', () => {
@@ -116,6 +126,22 @@ describe('Tag Controller', () => {
 
             expect(statusMock).toHaveBeenCalledWith(404);
             expect(jsonMock).toHaveBeenCalledWith({ message: 'Tag not found' });
+        });
+
+        it('should update only the provided fields', async () => {
+            mockReq = { params: { id: '1' }, body: { name: 'Partially Updated Tag' } };
+            const mockTag = { _id: '1', name: 'Partially Updated Tag', color: '#FFFFFF' };
+    
+            (editTag as jest.Mock).mockResolvedValue(mockTag);
+    
+            await editTagController(mockReq as Request, mockRes as Response);
+    
+            expect(editTag).toHaveBeenCalledWith('1', 'Partially Updated Tag', undefined);
+            expect(statusMock).toHaveBeenCalledWith(200);
+            expect(jsonMock).toHaveBeenCalledWith({
+                message: 'Tag updated successfully',
+                tag: expect.objectContaining({ id: '1', name: 'Partially Updated Tag', color: '#FFFFFF' }),
+            });
         });
     });
 

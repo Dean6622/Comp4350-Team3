@@ -57,6 +57,18 @@ describe('Login Controller', () => {
 
         expect(response.status).toBe(404);
     });
+
+    test('should return 500 if an error occurs during login', async () => {
+        (getUsersByUsername as jest.Mock).mockRejectedValue(new Error('Database error'));
+    
+        const response = await request(app)
+            .post('/login')
+            .send({ username: 'testUser', password: 'password123' });
+    
+        expect(response.status).toBe(500);
+        expect(response.body.error).toBe('Database error');
+    });
+    
 });
 
 describe('Account Creation Controller', () => {
@@ -114,4 +126,12 @@ describe('Logout Controller', () => {
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('Logged out successfully');
     });
+
+    test('should still return 200 if no token exists during logout', async () => {
+        const response = await request(app).post('/logout');
+    
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Logged out successfully');
+    });
+    
 });
