@@ -27,6 +27,7 @@
 ```sh
 git@github.com:Dean6622/Comp4350-Team3.git
 cd Comp4350-Team3
+test test
 ```
 
 ### 2️⃣ Install dependencies
