@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { addUserController, getSingleUserController, editUserController, deleteUserController } from '../../src/controller/userController';
-import { addUser, getUsersByUsername, editUser, deleteUser } from '../../src/db/userService';
+import { addUserController, getSingleUserController, editUserController, deleteUserController } from '../../controller/userController';
+import { addUser, getUsersByUsername, editUser, deleteUser } from '../../db/userService';
 
-jest.mock('../../src/db/userService');
+jest.mock('../../db/userService');
 
 describe('User Controller', () => {
     //Test settings assisted by AI

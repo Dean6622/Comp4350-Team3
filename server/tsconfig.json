@@ -7,16 +7,14 @@
     "target": "es6",
     "lib": ["es6"],
     "sourceMap": true,
-    "rootDir": "./", 
+    "rootDir": "./src",
     "outDir": "./build",
     "strict": false
   },
   "paths": {
     "@src/*": ["server/src/*"]
   },
-  "include": [
-    "src/**/*.ts", "tests/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "node_modules",
     "build"

@@ -1,10 +1,10 @@
 import request from 'supertest';
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
-import { addTagController, getAllTagsController, editTagController, deleteTagController } from '../../src/controller/tagController';
-import { addTag, getAllTags, editTag, deleteTag } from '../../src/db/tagService';
+import { addTagController, getAllTagsController, editTagController, deleteTagController } from '../../controller/tagController';
+import { addTag, getAllTags, editTag, deleteTag } from '../../db/tagService';
 
-jest.mock('../../src/db/tagService');
+jest.mock('../../db/tagService');
 
 describe('Tag Controller', () => {
   let app: Express;

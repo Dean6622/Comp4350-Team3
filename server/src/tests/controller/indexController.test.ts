@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import { getIndex, postIndex } from '../../src/controller/indexController';
+import { getIndex, postIndex } from '../../controller/indexController';
 
 const app = express();
 app.use(express.json());
