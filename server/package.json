@@ -9,7 +9,8 @@
     "start": "node ./build/app",
     "dev": "node --env-file=.env ./build/app",
     "debug": "set DEBUG=server && node --env-file=.env ./build/app",
-    "lint": "npx eslint .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -43,6 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.57.1",
+    "eslint-config-google": "^0.14.0",
     "globals": "^15.14.0",
     "jest": "^29.7.0",
     "supertest": "^7.0.0",
