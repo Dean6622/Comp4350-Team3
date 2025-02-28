@@ -52,9 +52,7 @@ app.use('/api/transaction', transaction);
 app.use('/api/tag', tag);
 
 // connect to DB
-connectDB().then(() => {
-    console.log("Database connection established. Starting app...");
-});
+connectDB();
 
 
 // catch 404 and forward to error handler

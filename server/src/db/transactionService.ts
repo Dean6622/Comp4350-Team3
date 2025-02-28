@@ -69,7 +69,6 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
         const updatedTransaction = await Transaction.findById(id);
 
         if (!updatedTransaction) {
-            console.log('No transaction found with the given ID.');
             return null;
         }
 
@@ -120,11 +119,6 @@ export const deleteTransaction = async (id: string) => {
             throw new Error('Invalid user ID format');
         }
         const result = await Transaction.deleteOne({_id: id});
-        if (result.deletedCount > 0) {
-            console.log('User deleted successfully.');
-        } else {
-            console.log('No user found with the given username.');
-        }
         return result;
     } catch (err) {
         if (err.name === 'ValidationError') {

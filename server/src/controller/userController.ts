@@ -31,7 +31,6 @@ export const addUserController = async (req: Request, res: Response) => {
 export const getSingleUserController = async (req: Request, res: Response) => {
     try {
         const { username } = req.params;
-        console.log(`get user: ${username}`);
         const users = await getUsersByUsername(username);
         if (users.length === 0){
             res.status(404).json({ message: "User not found" });

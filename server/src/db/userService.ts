@@ -33,9 +33,6 @@ export const getAllUsers = async () => {
 export const getUsersByUsername = async (username: string) => {
     try {
         const users = await User.find({ username });
-        if (users.length === 0) {
-            console.log('no users found with username:', username);
-        }
         return users;
     }
     catch (err) {
@@ -62,7 +59,6 @@ export const editUser = async (id: string, username?: string, password?: string)
         const updatedUser = await User.findByIdAndUpdate(id, updatedFields, { new: true });
 
         if (!updatedUser) {
-            console.log('No user with the ID found.');
             return null;
         }
 
@@ -85,11 +81,6 @@ export const deleteUser = async (id: string) => {
             throw new Error('Invalid user ID');
         }
         const result = await User.deleteOne({_id: id});
-        if (result.deletedCount > 0) {
-            console.log('User deleted successfully.');
-        } else {
-            console.log('No user found.');
-        }
         return result;
     } 
     catch (err) {

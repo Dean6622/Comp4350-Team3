@@ -6,7 +6,6 @@ export const addTag = async (name: string, color: string): Promise<ITag> => {
     try {
         const newTag = new Tag({ name, color });
         await newTag.save();
-        console.log('Tag added successfully:', newTag);
         return newTag;
     } 
     catch (err) {
@@ -20,7 +19,6 @@ export const getAllTags = async (): Promise<ITag[]> => {
     try {
    
         const tags = await Tag.find(); // Fetch all tags
-        console.log('Tags retrieved:', tags);
         return tags;
     } 
     catch (err) {
@@ -44,11 +42,9 @@ export const editTag = async (id: string, name?: string, color?: string): Promis
         const updatedTag = await Tag.findByIdAndUpdate(id, updatedFields, { new: true });
 
         if (!updatedTag) {
-            console.log('No tag with the ID found.');
             return null;
         }
 
-        console.log('Tag updated successfully:', updatedTag);
         return updatedTag;
     } 
     catch (err) {
@@ -64,11 +60,6 @@ export const deleteTag = async (id: string) => {
             throw new Error('Invalid tag ID');
         }
         const result = await Tag.deleteOne({ _id: id });
-        if (result.deletedCount > 0) {
-            console.log('Tag deleted successfully.');
-        } else {
-            console.log('No tag found.');
-        }
         return result;
     } 
     catch (err) {

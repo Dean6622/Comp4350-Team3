@@ -6,9 +6,7 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "start": "node ./build/app",
-    "dev": "node --env-file=.env ./build/app",
-    "debug": "set DEBUG=server && node --env-file=.env ./build/app",
+    "start": "node --env-file=.env ./build/app",
     "lint": "npx eslint .",
     "test": "jest",
     "test:watch": "jest --watch"
