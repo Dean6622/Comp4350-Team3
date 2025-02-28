@@ -1,8 +1,8 @@
 import request from 'supertest';
 import express from 'express';
-import { loginController, createAccountController, resetPasswordController, logoutController } from '../../src/controller/loginController';
-import { addUser, getUsersByUsername, editUser } from '../../src/db/userService';
-import * as userService from '../../src/db/userService';
+import { loginController, createAccountController, resetPasswordController, logoutController } from '../../controller/loginController';
+import { addUser, getUsersByUsername, editUser } from '../../db/userService';
+import * as userService from '../../db/userService';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -13,7 +13,7 @@ app.post('/register', createAccountController);
 app.post('/reset-password', resetPasswordController);
 app.post('/logout', logoutController);
 
-jest.mock('../../src/db/userService');
+jest.mock('../../db/userService');
 jest.mock('jsonwebtoken');
 
 const mockUser = {

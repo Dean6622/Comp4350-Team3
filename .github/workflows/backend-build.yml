@@ -33,7 +33,7 @@ jobs:
       run: cd server && npm run build
 
     - name: Unit Test
-      run: cd server && npm run clean && npm run test
+      run: cd server && rm -rf build && npm run clean && npm run test
 
   webhook-request:
     name: Send Discord Notification

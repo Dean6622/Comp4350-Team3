@@ -4,16 +4,16 @@ import {
     getAllTransactionController, 
     editTransactionController, 
     deleteTransactionController 
-} from '../../src/controller/transactionController';
+} from '../../controller/transactionController';
 
 import { 
     addTransaction, 
     getAllTransactions, 
     editTransaction, 
     deleteTransaction 
-} from '../../src/db/transactionService';
+} from '../../db/transactionService';
 
-jest.mock('../../src/db/transactionService');
+jest.mock('../../db/transactionService');
 
 describe('Transaction Controller', () => {
     //Test settings assisted by AI
