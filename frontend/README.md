@@ -3,23 +3,44 @@
 ## 📂 Folder Structure
 ```
 /frontend
-├── public                      # Static assets (images, favicons, etc.)
-├── app                         # Next.js app (routing system)
-│   ├── api                     # All API routers
-│   ├── contexts                # All contexts folder
-│   │   ├── AuthContext.tsx     # connect between api and UI
-│   ├── auth                    # Authentication folders
-│   │   ├── login               # login folder
+├── .next                      # Next.js build artifacts (auto-generated)
+├── public                     # Static assets (images, favicons, etc.)
+├── app                        # Next.js application root
+│   ├── api                    # API routes for client-side requests
+│   │   ├── auth.ts            # Authentication API methods
+│   │   ├── transac.ts         # Transactions API methods
+│   ├── auth                   # Authentication-related pages
+│   │   ├── login              # Login page
+│   │   │   ├── page.tsx       
+│   │   ├── reset-password     # Password reset page
 │   │   │   ├── page.tsx 
-│   │   ├── signup              # signup folder
+│   │   ├── signup             # Signup page
 │   │   │   ├── page.tsx 
-│   ├── page.tsx                # Homepage
-├── .env.local                  # Environment variables (ignored in version control)
-├── next.config.js              # Next.js configuration
-├── tailwind.config.ts          # Tailwind css configure
-├── package.json                # Project metadata and dependencies
-├── eslint.config.mjs           # Eslint configure
-└── README.md                   # Project documentation
+│   │   │   ├── layout.tsx
+│   ├── contexts               # React Context API providers
+│   │   ├── AuthContext.tsx    # Authentication state context
+│   │   ├── TransactionsContext.tsx # Transactions state context
+│   ├── dashboard              # Dashboard main page
+│   │   ├── page.tsx 
+│   ├── transactions           # Transactions page
+│   │   ├── page.tsx
+│   ├── favicon.ico            # Website favicon
+│   ├── globals.css            # Global styles
+│   ├── layout.tsx             # Root layout for the app
+│   ├── page.tsx               # Main entry page
+├── components                 # Reusable UI components
+│   ├── ui                     # UI-related components
+│   │   ├── Button.tsx         # Button components
+│   │   ├── Input.tsx          # Input components
+│   │   ├── Navbar.tsx         # Navigation bar
+│   │   ├── Sidebar.tsx        # Sidebar menu
+│   │   ├── TransactionFormModal.tsx # Transaction form modal
+├── .env.local                 # Local environment variables (ignored by Git)
+├── next.config.js             # Next.js configuration
+├── tailwind.config.ts         # Tailwind CSS configuration
+├── package.json               # Project metadata and dependencies
+├── eslint.config.mjs          # ESLint configuration
+└── README.md                  # Project documentation
 ```
 
 ## 🛠 Installation & Setup
@@ -27,7 +48,6 @@
 ```sh
 git@github.com:Dean6622/Comp4350-Team3.git
 cd Comp4350-Team3
-test test
 ```
 
 ### 2️⃣ Install dependencies
