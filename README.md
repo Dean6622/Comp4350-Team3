@@ -15,7 +15,7 @@
 ## Architectural Diagrams
 * Our [architectural diagram](https://github.com/Dean6622/Comp4350-Team3/wiki/Diagram)
 
-## Contributors
+## Contributors xxtest
 | Name | Username   | Role                 |
 |-----|------------|----------------------|
 | Haozhi Wang | Echo-zzz   | Full stack Developer (Leader) |
