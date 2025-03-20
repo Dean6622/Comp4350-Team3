@@ -3,7 +3,7 @@ import {addReminder, getAllReminders, editReminder, deleteReminder} from "../db/
 import {IReminder} from "../db/reminderDB";
 import {controlLog} from "./controlLog";
 
-//Helps format reminders to be in a neater format
+// Helps format reminders to be in a neater format
 const formatReminder = (reminder: IReminder) => ({
   id: reminder._id.toString(),
   name: reminder.name,
@@ -12,7 +12,7 @@ const formatReminder = (reminder: IReminder) => ({
   viewed: reminder.viewed,
 });
 
-//Controller to handle adding a new Reminder
+// Controller to handle adding a new Reminder
 export const addReminderController = async (req: Request, res: Response) => {
   const {userId, name, text, time} = req.body;
 
@@ -25,7 +25,7 @@ export const addReminderController = async (req: Request, res: Response) => {
   }
 };
 
-//Controller to fetch all reminders for a specific user
+// Controller to fetch all reminders for a specific user
 export const getAllRemindersController = async (req: Request, res: Response) => {
   const {userId} = req.params;
 
@@ -38,7 +38,7 @@ export const getAllRemindersController = async (req: Request, res: Response) => 
   }
 };
 
-//Controller to handle editing an existing reminder
+// Controller to handle editing an existing reminder
 export const editReminderController = async (req: Request, res: Response) => {
   const {id} = req.params;
   const {name, text, time, viewed} = req.body;
@@ -57,7 +57,7 @@ export const editReminderController = async (req: Request, res: Response) => {
   }
 };
 
-//Controller to handle deleting a reminder
+// Controller to handle deleting a reminder
 export const deleteReminderController = async (req: Request, res: Response) => {
   const {id} = req.params;
 

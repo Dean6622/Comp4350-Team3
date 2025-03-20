@@ -9,8 +9,8 @@
     "start": "node --env-file=.env ./build/app",
     "dev": "cross-env DEBUG=server* node --env-file=.env ./build/app",
     "debug": "set DEBUG=server* && node --env-file=.env ./build/app",
-    "lint": "npx eslint .",
-    "test": "jest",
+    "lint": "npx eslint --fix.",
+    "test": "jest --coverage",
     "test:watch": "jest --watch"
   },
   "description": "Server",
