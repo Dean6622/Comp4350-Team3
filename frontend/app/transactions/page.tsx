@@ -10,9 +10,9 @@ import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
 import Layout from "@/components/ui/Layout";
-import TransactionList from "@/components/ui/TransactionList";
+import TransactionList from "@/components/ui/Transaction/TransactionList";
 import { FloatingButton, FilterButton } from "@/components/ui/Button";
-import TransactionFormModal from "@/components/ui/TransactionFormModal";
+import TransactionFormModal from "@/components/ui/Transaction/TransactionFormModal";
 import { SearchBar } from "@/components/ui/Input";
 
 export default function TransactionsPage() {

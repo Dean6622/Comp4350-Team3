@@ -12,8 +12,8 @@ import { useAuth } from "@/app/contexts/AuthContext";
 
 // components
 import Layout from "@/components/ui/Layout";
-import { ReminderList } from "@/components/ui/ReminderList";
-import NewReminderForm from "@/components/ui/NewReminderModal";
+import { ReminderList } from "@/components/ui/Reminder/ReminderList";
+import NewReminderForm from "@/components/ui/Reminder/NewReminderModal";
 
 export default function ReminderPage() {
     const { reminders, getReminders } = useReminders();

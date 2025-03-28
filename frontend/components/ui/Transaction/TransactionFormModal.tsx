@@ -9,12 +9,13 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { X } from "lucide-react";
+import { useTags } from "@/app/contexts/TagContext";
 import {
     addTransactionsToServer,
     editTransactionsOnServer,
     Transaction,
 } from "@/app/api/transac";
-const currencies = ["CAD", "USD"];
+import {Tag} from "@/app/api/tag";
 const types = ["Saving", "Spending"];
 
 interface TransactionFormModalProps {
@@ -32,12 +33,13 @@ export default function TransactionFormModal({
     mode,
     existingTransaction,
 }: TransactionFormModalProps) {
+    const { tags, getTags } = useTags();
     const [transacData, setTransacData] = useState({
         name: "",
         amount: null as number | null,
         time: new Date(),
         type: "Saving",
-        currency: "CAD",
+        tags: [] as Tag[],
     });
 
     const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ export default function TransactionFormModal({
         transacData.amount = null;
         transacData.time = new Date();
         transacData.type = "Saving";
-        transacData.currency = "CAD";
+        transacData.tags = [];
     };
 
     const handleChange = (
@@ -72,7 +74,7 @@ export default function TransactionFormModal({
             transacData.amount = existingTransaction.amount;
             transacData.time = new Date(existingTransaction.date);
             transacData.type = existingTransaction.type;
-            transacData.currency = existingTransaction.currency;
+            transacData.tags = existingTransaction.tags || [];
             setHeadLine("Edit Transaction");
         } else {
             cleanTransacData();
@@ -80,13 +82,38 @@ export default function TransactionFormModal({
         }
     }, [mode, existingTransaction]);
 
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            const userId = localStorage.getItem("userid");
+            if (userId) {
+                await getTags(userId);
+            }
+        };
+
+        if (isOpen) {
+            fetchTags();
+        }
+    }, [isOpen, getTags]);
+
+    const handleTagSelection = (tag: Tag) => {
+        setTransacData((prev) => {
+            const isTagSelected = prev.tags.some((t) => t.id === tag.id);
+
+            const newTags = isTagSelected
+                ? prev.tags.filter((t) => t.id !== tag.id)
+                : [...prev.tags, tag];
+
+            return { ...prev, tags: newTags };
+        });
+    };
+
     const handleSubmit = async () => {
         setMessage(null);
 
         if (
             !transacData.name ||
             !transacData.amount ||
-            !transacData.currency ||
             !transacData.type
         ) {
             setMessage({ text: "All fields are required.", type: "error" });
@@ -117,7 +144,7 @@ export default function TransactionFormModal({
                     formattedDate,
                     transacData.amount,
                     transacData.type,
-                    transacData.currency
+                    transacData.tags,
                 );
                 setMessage({
                     text: "Transaction added successfully!",
@@ -130,7 +157,7 @@ export default function TransactionFormModal({
                     formattedDate,
                     transacData.amount,
                     transacData.type,
-                    transacData.currency
+                    transacData.tags,
                 );
                 setMessage({
                     text: "Transaction updated successfully!",
@@ -202,19 +229,6 @@ export default function TransactionFormModal({
                     className="w-full border border-gray-300 p-2 rounded mb-2"
                 />
 
-                {/* Currency Dropdown */}
-                <select
-                    value={transacData.currency}
-                    onChange={(e) => handleChange("currency", e.target.value)}
-                    className="w-full border border-gray-300 p-2 rounded mb-4 bg-white"
-                >
-                    {currencies.map((cur) => (
-                        <option key={cur} value={cur}>
-                            {cur}
-                        </option>
-                    ))}
-                </select>
-
                 {/* Type Dropdown */}
                 <select
                     value={transacData.type}
@@ -238,6 +252,36 @@ export default function TransactionFormModal({
                     className="w-full border border-gray-300 p-2 rounded mb-2"
                     showPopperArrow={false}
                 />
+
+                {/* Tags Selection */}
+                <div className="mb-4">
+                    <label className="font-bold mb-2 block">Tags</label>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        {tags.map((tag) => {
+                            const isTagSelected = transacData.tags.some((t) => t.id === tag.id);
+                            return (
+                                <div
+                                    key={tag.id}
+                                    className={`flex items-center gap-1 p-1 rounded ${isTagSelected ? "bg-blue-100" : ""}`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={isTagSelected}
+                                        onChange={() => handleTagSelection(tag)}
+                                        className="mr-1 cursor-pointer"
+                                    />
+                                    <span
+                                        className="px-2 py-1 text-sm rounded-full cursor-pointer"
+                                        style={{ backgroundColor: tag.color, color: "white" }}
+                                        onClick={() => handleTagSelection(tag)}
+                                    >
+                                        {tag.name}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
 
                 {/* Save Button */}
                 <button

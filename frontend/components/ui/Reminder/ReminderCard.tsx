@@ -7,11 +7,11 @@
  */
 import React, { useEffect, useRef, useState } from "react";
 import { Reminder, editReminderFromServer } from "@/app/api/reminder";
-import { CheckButton } from "./Button";
+import { CheckButton } from "../Button";
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { formatTimeDifference } from "@/lib/utils";
 import { useReminders } from "@/app/contexts/ReminderContext";
-import ReminderEditModal from "@/components/ui/ReminderEditModal";
+import ReminderEditModal from "@/components/ui/Reminder/ReminderEditModal";
 
 interface ReminderCardProps {
     reminder: Reminder;

@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Goal } from "@/app/api/goal";
 import { Edit, MoreHorizontal, PiggyBank, Trash2 } from "lucide-react";
 import { useGoals } from "@/app/contexts/GoalContext";
-import GoalEditModal from "@/components/ui/GoalEditModal";
+import GoalEditModal from "@/components/ui/Goal/GoalEditModal";
 
 // props: the goal object with information and the functions call when goal refresh is needed
 interface GoalCardProps {

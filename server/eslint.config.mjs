@@ -24,6 +24,7 @@ export default [
       "quotes": ["error", "double"], // Enforce double quotes
       "max-len": ["error", {"code": 200}], // Limit line length to 200 characters
       "require-jsdoc": "off", // Disable JSDoc requirement
+      "new-cap": 0,
     },
   },
   {languageOptions: {globals: globals.browser}},

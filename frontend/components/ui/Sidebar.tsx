@@ -18,7 +18,7 @@ import {
     AlarmClock,
 } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -29,6 +29,16 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     const pathname = usePathname();
     const { logout } = useAuth();
     const [isHovered, setIsHovered] = useState(false);
+    const [username, setUsername] = useState<string>("User");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedUsername = localStorage.getItem("username");
+            if (storedUsername) {
+                setUsername(storedUsername);
+            }
+        }
+    }, []);
 
     const menuItems = [
         {
@@ -66,6 +76,13 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
+            {/* Display Username */}
+            {isOpen && (
+                <div className="flex items-center justify-center mb-10 text-3xl font-bold italic text-white">
+                    {username}
+                </div>
+            )}
+
             {/* Sidebar Toggle Button */}
             <button
                 onClick={toggleSidebar}

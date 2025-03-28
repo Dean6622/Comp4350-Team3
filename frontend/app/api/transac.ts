@@ -1,3 +1,4 @@
+import { Tag } from "@/app/api/tag";
 
 export interface Transaction {
     id: string,
@@ -6,6 +7,7 @@ export interface Transaction {
     currency: string,
     type: string,
     name: string,
+    tags: Tag[],
 }
 
 export async function getTransactionsFromServer(userId: string): Promise<Transaction[]> {
@@ -29,12 +31,14 @@ export async function addTransactionsToServer(
     date: string,
     amount: number,
     type: string,
-    currency: string): Promise< {message:string}> {
+    tags: Tag[]): Promise<{message: string}> {
 
+    const currency = "CAD";
+    const tagIds = tags.map(tag => tag.id);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, name, date, amount, type, currency}),
+        body: JSON.stringify({ userId, name, date, amount, type, currency, tags: tagIds }),
         credentials: "include"
     });
 
@@ -50,12 +54,14 @@ export async function editTransactionsOnServer(
     date: string,
     amount: number,
     type: string,
-    currency: string): Promise< {message:string}> {
+    tags: Tag[]): Promise< {message:string}> {
 
+    const currency = "CAD";
+    const tagIds = tags.map(tag => tag.id);
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transactionId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({name, date, amount, type, currency}),
+        body: JSON.stringify({name, date, amount, type, currency, tags: tagIds}),
         credentials: "include"
     });
 

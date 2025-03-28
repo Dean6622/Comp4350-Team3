@@ -4,8 +4,8 @@ import Layout from "@/components/ui/Layout";
 import { useTags } from "@/app/contexts/TagContext";
 import { useEffect, useState } from "react";
 import { Tag } from "@/app/api/tag";
-import TagList from "@/components/ui/TagList";
-import NewTagModal from "@/components/ui/NewTagModal";
+import TagList from "@/components/ui/Tag/TagList";
+import NewTagModal from "@/components/ui/Tag/NewTagModal";
 import {useAuth} from "@/app/contexts/AuthContext";
 
 export default function TagPage() {

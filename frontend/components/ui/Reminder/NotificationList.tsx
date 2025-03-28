@@ -8,7 +8,7 @@ import { MiniReminderList } from "./ReminderList";
 import { useReminders } from "@/app/contexts/ReminderContext";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useState, useEffect } from "react";
-import { NotificationButton } from "./Button";
+import { NotificationButton } from "../Button";
 
 // display the difference
 const SEC_PER_DAY = 86400;

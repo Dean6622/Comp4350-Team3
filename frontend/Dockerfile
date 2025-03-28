@@ -31,9 +31,6 @@ RUN npm install --omit=dev
 COPY --from=development /usr/src/frontend/package.json ./
 COPY --from=development /usr/src/frontend/.next ./.next
 COPY --from=development /usr/src/frontend/public ./public
-COPY --from=development /usr/src/frontend/node_modules ./node_modules
-
-
 
 
 CMD ["npm", "run", "start"]

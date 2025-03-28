@@ -3,15 +3,15 @@ import {ITag} from "../db/tagDB";
 import {addTag, getAllTags, editTag, deleteTag} from "../db/tagService";
 import {controlLog} from "./controlLog";
 
-//helps format tags to be in a neater format
+// helps format tags to be in a neater format
 const formatTag = (tag: ITag) => ({
   id: tag._id.toString(),
   name: tag.name,
   color: tag.color,
-  message: tag.message || ""
+  message: tag.message || "",
 });
 
-//Controller to create a new tag
+// Controller to create a new tag
 export const addTagController = async (req: Request, res: Response) => {
   const {userId, name, color, message} = req.body;
   try {
@@ -27,9 +27,9 @@ export const addTagController = async (req: Request, res: Response) => {
   }
 };
 
-//Controller to fetch all tags for a given user
+// Controller to fetch all tags for a given user
 export const getAllTagsController = async (req: Request, res: Response) => {
-  const { userId } = req.params; 
+  const {userId} = req.params;
 
   try {
     const tags = await getAllTags(userId);
@@ -42,7 +42,7 @@ export const getAllTagsController = async (req: Request, res: Response) => {
   }
 };
 
-//Controller to handle updating an existing tag
+// Controller to handle updating an existing tag
 export const editTagController = async (req: Request, res: Response) => {
   const {id} = req.params;
   const {name, color, message} = req.body;
@@ -62,7 +62,7 @@ export const editTagController = async (req: Request, res: Response) => {
   }
 };
 
-//Controller to handle deleting a tag
+// Controller to handle deleting a tag
 export const deleteTagController = async (req: Request, res: Response) => {
   const {id} = req.params;
   try {

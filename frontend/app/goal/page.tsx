@@ -10,8 +10,8 @@ import { useGoals } from "@/app/contexts/GoalContext";
 import { Goal } from "../api/goal";
 import { useAuth } from "@/app/contexts/AuthContext";
 import Layout from "@/components/ui/Layout";
-import GoalList from "@/components/ui/GoalList";
-import NewGoalForm from "@/components/ui/NewGoalModal";
+import GoalList from "@/components/ui/Goal/GoalList";
+import NewGoalForm from "@/components/ui/Goal/NewGoalModal";
 
 export default function GoalsPage() {
     const { goals, getGoals } = useGoals();

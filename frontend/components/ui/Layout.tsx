@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import NotificationList from "./NotificationList";
+import NotificationList from "./Reminder/NotificationList";
 
 /**
  * Layout for other pages
