@@ -65,7 +65,7 @@ git@github.com:Dean6622/Comp4350-Team3.git
 cd Comp4350-Team3
 ```
 
-### 2️⃣ Install dependencies
+### 2️⃣ Install dependencies sonar test
 ```sh
 npm install  # or yarn install
 ```
