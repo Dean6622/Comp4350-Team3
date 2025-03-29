@@ -1,85 +1,98 @@
-name: Backend Build
+name: Backend Build and SonarQube Scan
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        defaults:
-            run:
-                working-directory: ./server
+    defaults:
+      run:
+        working-directory: ./server
 
-        strategy:
-            matrix:
-                node-version: [18.x]
+    strategy:
+      matrix:
+        node-version: [18.x]
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: "npm"
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-            - name: Install dependencies
-              run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-            - name: Build
-              run: npm run build
+      - name: Build
+        run: npm run build
 
-            - name: Unit Test
-              run: rm -rf build && npm run clean && npm run test
+      - name: Unit Test
+        run: rm -rf build && npm run clean && npm run test -- --coverage --coverageReporters=lcov
 
-    webhook-request:
-        name: Send Discord Notification
-        needs: build
-        runs-on: ubuntu-latest
-        if: always()
+  sonarqbe:
+    name: SonarQube Scan
+    runs-on: windows-latest
+    needs: build  # Ensure the SonarQube scan runs after the build job
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-        steps:
-            - name: Determine Build Status
-              id: check_status
-              run: echo "BUILD_STATUS=${{ needs.build.result }}" >> $GITHUB_ENV
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-            - name: Send a request to Discord webhook
-              run: |
-                  if [[ "${{ needs.build.result }}" == "success" ]]; then
-                    COLOR=65280 
-                    STATUS="✅ **Backend Build Passed!**"
-                    DESCRIPTION="Backend checks passed for branch **${{ github.ref }}**."
-                  else
-                    COLOR=16711680
-                    STATUS="❌ **Backend Build Failed!**"
-                    DESCRIPTION="Backend checks **failed** on branch **${{ github.ref }}**. Please check the logs."
-                  fi
+  webhook-request:
+    name: Send Discord Notification
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
 
-                  # Following notification styling are referened by 
-                  # "https://medium.com/@yusufbiyik/useful-github-actions-discord-webhooks-6e356751d954"
-                  RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
-                  "username": "GitHub Actions",
-                  "content": "@everyone",
-                  "embeds": [
-                    {
-                      "type": "rich",
-                      "title": "'"$STATUS"'",
-                      "description": "'"$DESCRIPTION"'",
-                      "color": '"$COLOR"',
-                      "author": {
-                        "name": "${{ github.actor }}",
-                        "url": "https://github.com/${{ github.actor }}",
-                        "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
-                      },
-                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
-                  ]
-                  }' ${{ secrets.WEBHOOK_URL }})
+    steps:
+      - name: Determine Build Status
+        id: check_status
+        run: echo "BUILD_STATUS=${{ needs.build.result }}" >> $GITHUB_ENV
 
-                  echo "Webhook server response: $RESPONSE"
+      - name: Send a request to Discord webhook
+        run: |
+          if [[ "${{ needs.build.result }}" == "success" ]]; then
+            COLOR=65280
+            STATUS="✅ **Backend Build Passed!**"
+            DESCRIPTION="Backend checks passed for branch **${{ github.ref }}**."
+          else
+            COLOR=16711680
+            STATUS="❌ **Backend Build Failed!**"
+            DESCRIPTION="Backend checks **failed** on branch **${{ github.ref }}**. Please check the logs."
+          fi
+
+          RESPONSE=$(curl -H "Content-Type: application/json" -X POST -d '{
+          "username": "GitHub Actions",
+          "content": "@everyone",
+          "embeds": [
+            {
+              "type": "rich",
+              "title": "'"$STATUS"'",
+              "description": "'"$DESCRIPTION"'",
+              "color": '"$COLOR"',
+              "author": {
+                "name": "${{ github.actor }}",
+                "url": "https://github.com/${{ github.actor }}",
+                "icon_url": "https://avatars.githubusercontent.com/u/${{ github.actor_id }}?v=4"
+              },
+              "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+          ]
+          }' ${{ secrets.WEBHOOK_URL }})
+
+          echo "Webhook server response: $RESPONSE"
