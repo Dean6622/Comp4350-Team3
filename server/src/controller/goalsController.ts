@@ -90,6 +90,7 @@ export const editGoalController = async (req: Request, res: Response) => {
 
     const amountDiff = updatedGoal.currAmount - oldAmount;
 
+    //make sure that the balance is greater than the amount being spent on the goals
     if (amountDiff < 0) {
       const user = await User.findById(existingGoal.user);
       if (!user) {
