@@ -88,19 +88,14 @@ export const editGoalController = async (req: Request, res: Response) => {
   try {
    
     const existingGoal = await findGoalById(id);
-
-
     if (!existingGoal) {
       return res.status(404).json({message: "Goal not found"});
     }
 
 
     const oldAmount = existingGoal.currAmount;
-   
     const updatedGoal = await editGoal(id, name, time, currAmount, goalAmount, category);
-    if (updatedGoal) {
-      res.status(200).json({message: "Goal updated successfully", goal: formatGoal(updatedGoal)});
-    } else {
+    if (!updatedGoal) {
       return res.status(404).json({message: "Goal not found"});
     }
 
@@ -137,6 +132,11 @@ export const editGoalController = async (req: Request, res: Response) => {
         amountDiff > 0 ? "Saving" : "Spending"
       );
     }
+
+    res.status(200).json({
+      message: "Goal updated successfully", 
+      goal: formatGoal(updatedGoal)
+    });
 
 
   } catch (err) {

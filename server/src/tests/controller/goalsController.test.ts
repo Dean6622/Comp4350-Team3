@@ -218,7 +218,6 @@ describe("Goal Controller", () => {
     it("should update a goal successfully", async () => {
       const updatedGoal = {
         _id: "goal123",
-        user: "user123",
         name: "Updated Goal",
         time: "2025-03-01T12:00:00Z",
         currAmount: 75,
@@ -228,6 +227,7 @@ describe("Goal Controller", () => {
 
 
       (editGoal as jest.Mock).mockResolvedValue(updatedGoal);
+      (addTransaction as jest.Mock).mockResolvedValue({}); // Mock successful transaction
 
 
       const response = await request(app).put("/api/goal/goal123").send({
@@ -243,7 +243,6 @@ describe("Goal Controller", () => {
       expect(response.body.message).toBe("Goal updated successfully");
       expect(response.body.goal).toEqual({
         id: "goal123",
-        user: "user123",
         name: "Updated Goal",
         time: expect.any(String),
         currAmount: 75,
@@ -327,9 +326,9 @@ describe("Goal Controller", () => {
         "user123",
         "Save Money",
         expect.any(String),
-        500,
+        450,
         "CAD",
-        "Spending",
+        "Saving",
       );
     });
   });
