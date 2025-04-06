@@ -2,7 +2,7 @@ import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 import Goal from "../../db/goalsDB";
 import User from "../../db/userDB";
-import {addGoal, getAllGoals, editGoal, deleteGoal} from "../../db/goalsService";
+import {addGoal, getAllGoals, editGoal, deleteGoal, findGoalById} from "../../db/goalsService";
 import {addUser} from "../../db/userService";
 
 beforeEach(() => {
@@ -149,6 +149,57 @@ describe("Goals Service Tests", () => {
 
     test("should not delete a goal with invalid ID", async () => {
       await expect(deleteGoal("invalid-id")).rejects.toThrow();
+    });
+  });
+
+
+  describe("findGoalById Tests", () => {
+    let testGoalId: string;
+
+    beforeEach(async () => {
+      // Create a test goal before each test
+      const goal = await addGoal(
+        userId,
+        "Test Goal", 
+        "2025-12-31", 
+        100, 
+        500, 
+        "Saving"
+      );
+      testGoalId = goal._id.toString();
+    });
+
+    test("should find an existing goal by ID", async () => {
+      const foundGoal = await findGoalById(testGoalId);
+      
+      expect(foundGoal).not.toBeNull();
+      expect(foundGoal?._id.toString()).toBe(testGoalId);
+      expect(foundGoal?.name).toBe("Test Goal");
+    });
+
+    test("should return null for non-existent goal", async () => {
+      const nonExistentId = new mongoose.Types.ObjectId().toString();
+      const result = await findGoalById(nonExistentId);
+      
+      expect(result).toBeNull();
+    });
+
+    test("should throw error for invalid ID format", async () => {
+      await expect(findGoalById("invalid-id-format"))
+        .rejects
+        .toThrow("Invalid goal ID format");
+    });
+
+    test("should handle malformed ObjectId", async () => {
+      await expect(findGoalById("123"))
+        .rejects
+        .toThrow("Invalid goal ID format");
+    });
+
+    test("should handle empty string ID", async () => {
+      await expect(findGoalById(""))
+        .rejects
+        .toThrow("Invalid goal ID format");
     });
   });
 });

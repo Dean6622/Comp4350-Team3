@@ -3,6 +3,7 @@ import User from "./userDB";
 import mongoose from "mongoose";
 import {dbLog} from "./dbLog";
 
+
 // adds a new financial goal for the user
 export const addGoal = async (userId: string, name: string, time: string, currAmount: number, goalAmount: number, category: string) => {
   try {
@@ -12,6 +13,7 @@ export const addGoal = async (userId: string, name: string, time: string, currAm
       throw new Error("User does not exist");
     }
 
+
     // check if the category is valid
     if (category) {
       const validCategories = ["Saving", "Investment", "Debt Payment", "Other"];
@@ -19,6 +21,7 @@ export const addGoal = async (userId: string, name: string, time: string, currAm
         throw new Error(`Invalid category. Must be one of: ${validCategories.join(", ")}`);
       }
     }
+
 
     // create the new goal
     const newGoal = new Goal({
@@ -29,6 +32,7 @@ export const addGoal = async (userId: string, name: string, time: string, currAm
       goalAmount,
       category,
     });
+
 
     await newGoal.save();
     return newGoal;
@@ -41,6 +45,7 @@ export const addGoal = async (userId: string, name: string, time: string, currAm
   }
 };
 
+
 // retrieves all goals for the given user
 export const getAllGoals = async (userId: string): Promise<IGoal[]> => {
   try {
@@ -48,6 +53,7 @@ export const getAllGoals = async (userId: string): Promise<IGoal[]> => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       throw new Error("Invalid user ID format");
     }
+
 
     const goals = await Goal.find({user: userId}).populate("user");
     return goals;
@@ -57,6 +63,7 @@ export const getAllGoals = async (userId: string): Promise<IGoal[]> => {
   }
 };
 
+
 // Edit the goal
 export const editGoal = async (id: string, name?: string, time?: string, currAmount?: number, goalAmount?: number, category?: string): Promise<IGoal | null> => {
   try {
@@ -65,12 +72,14 @@ export const editGoal = async (id: string, name?: string, time?: string, currAmo
       throw new Error("Invalid goal ID format");
     }
 
+
     // retrieve the specific goal
     const updatedGoal = await Goal.findById(id);
     if (!updatedGoal) {
       dbLog("No goal found with the given ID.");
       return null;
     }
+
 
     // ensure current amount doesen't exceed goal amount
     const numCurrAmount = parseFloat(currAmount as unknown as string);
@@ -79,11 +88,13 @@ export const editGoal = async (id: string, name?: string, time?: string, currAmo
       currAmount = goalAmount;
     }
 
+
     // update the field if provided
     if (time) updatedGoal.time = new Date(time);
     if (name) updatedGoal.name = name;
     if (currAmount) updatedGoal.currAmount = currAmount;
     if (goalAmount) updatedGoal.goalAmount = goalAmount;
+
 
     // validate and update category if provided
     if (category) {
@@ -94,6 +105,7 @@ export const editGoal = async (id: string, name?: string, time?: string, currAmo
       updatedGoal.category = category;
     }
 
+
     await updatedGoal.save();
     return updatedGoal;
   } catch (err) {
@@ -102,6 +114,15 @@ export const editGoal = async (id: string, name?: string, time?: string, currAmo
   }
 };
 
+
+export const findGoalById = async (id: string): Promise<IGoal | null> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error("Invalid goal ID format");
+  }
+  return await Goal.findById(id);
+};
+
+
 // delete given goal
 export const deleteGoal = async (id: string) => {
   try {
@@ -109,6 +130,7 @@ export const deleteGoal = async (id: string) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error("Invalid goal ID format");
     }
+
 
     const result = await Goal.deleteOne({_id: id});
     if (result.deletedCount > 0) {
