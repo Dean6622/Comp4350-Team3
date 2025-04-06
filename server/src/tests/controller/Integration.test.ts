@@ -8,8 +8,8 @@ import {addTransaction, getAllTransactions, editTransaction, deleteTransaction} 
 import {addReminderController, getAllRemindersController, editReminderController, deleteReminderController} from "../../controller/reminderController";
 import {addReminder, getAllReminders, editReminder, deleteReminder} from "../../db/reminderService";
 import {addGoalController, getAllGoalsController, editGoalController, deleteGoalController} from "../../controller/goalsController";
-import {addGoal, getAllGoals, editGoal, deleteGoal} from "../../db/goalsService";
-import {addUser, getUsersByUsername, editUser} from "../../db/userService";
+import {addGoal, getAllGoals, editGoal, deleteGoal, findGoalById} from "../../db/goalsService";
+import {addUser, getUsersByUsername, editUser, findUserById} from "../../db/userService";
 import {addTag, getAllTags, editTag, deleteTag} from "../../db/tagService";
 
 jest.mock("../../db/userService");
@@ -19,6 +19,12 @@ jest.mock("../../db/transactionService");
 jest.mock("../../db/reminderService");
 jest.mock("../../db/goalsService");
 jest.mock("jsonwebtoken");
+jest.mock("../../db/userService");
+(findUserById as jest.Mock).mockResolvedValue({
+  _id: "123",
+  username: "testuser",
+  balance: 1000
+});
 
 const app = express();
 app.use(bodyParser.json());
@@ -347,6 +353,7 @@ describe("Goal Integration Tests", () => {
   it("should add a new goal", async () => {
     (addGoal as jest.Mock).mockResolvedValue({
       _id: "1",
+      user: "123",
       name: "Save for Vacation",
       time: "2024-12-31",
       currAmount: 500,
@@ -386,11 +393,23 @@ describe("Goal Integration Tests", () => {
   it("should edit a goal", async () => {
     (editGoal as jest.Mock).mockResolvedValue({
       _id: "1",
+      user: "123",
       name: "Save for Car",
       time: "2025-06-01",
       currAmount: 1000,
       goalAmount: 5000,
       category: "Automobile",
+    });
+
+    // And mock findGoalById for the edit test:
+    (findGoalById as jest.Mock).mockResolvedValue({
+      _id: "1",
+      user: "123",
+      name: "Initial Goal",
+      time: "2025-06-01",
+      currAmount: 300,
+      goalAmount: 800,
+      category: "Saving"
     });
 
     const res = await request(app).put("/goals/1").send({
