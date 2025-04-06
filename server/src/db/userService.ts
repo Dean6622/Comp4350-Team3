@@ -85,6 +85,15 @@ export const editUser = async (id: string, username?: string, password?: string,
   }
 };
 
+
+export const findUserById = async (id: string): Promise<IUser | null> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error("Invalid user ID format");
+  }
+  return await User.findById(id);
+};
+
+
 // delete existing user
 export const deleteUser = async (id: string) => {
   try {

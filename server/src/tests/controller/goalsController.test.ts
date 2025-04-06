@@ -4,6 +4,7 @@ import express from "express";
 import {addGoal, getAllGoals, editGoal, deleteGoal, findGoalById} from "../../db/goalsService";
 import {addGoalController, getAllGoalsController, editGoalController, deleteGoalController} from "../../controller/goalsController";
 import {addTransaction} from "../../db/transactionService";
+import { findUserById } from "../../db/userService";
 
 
 jest.mock("../../db/goalsService", () => ({
@@ -24,18 +25,21 @@ jest.mock("../../db/goalsService", () => ({
   }),
 }));
 
+jest.mock("../../db/userService", () => ({
+  findUserById: jest.fn(),
+}));
 
 jest.mock("../../db/transactionService", () => ({
   addTransaction: jest.fn(),
 }));
 
 
-// beforeEach(() => {
-//   jest.spyOn(console, "error").mockImplementation(() => {});
-// });
-// afterEach(() => {
-//   jest.restoreAllMocks();
-// });
+beforeEach(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 
 const app = express();
@@ -213,11 +217,28 @@ describe("Goal Controller", () => {
       (findGoalById as jest.Mock).mockImplementation((id) => {
         return id === "goal123" ? Promise.resolve(fakeGoal) : Promise.resolve(null);
       });
+      // Mock findUserById to return a user with sufficient balance
+      (findUserById as jest.Mock).mockResolvedValue({
+        _id: "user123",
+        balance: 1000
+      });
     });
+
+    // Mock findGoalById to return the existing goal
+  (findGoalById as jest.Mock).mockResolvedValue({
+    _id: "goal123",
+    user: "user123",
+    name: "Save Money",
+    time: "2025-02-17T12:00:00Z",
+    currAmount: 50,
+    goalAmount: 100,
+    category: "Finance",
+  });
 
     it("should update a goal successfully", async () => {
       const updatedGoal = {
         _id: "goal123",
+        user: "user123",
         name: "Updated Goal",
         time: "2025-03-01T12:00:00Z",
         currAmount: 75,
@@ -238,7 +259,7 @@ describe("Goal Controller", () => {
         category: "Finance",
       });
 
-
+      console.log(response.body); // Add this to see the actual error
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Goal updated successfully");
       expect(response.body.goal).toEqual({

@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 
 
 import {addTransaction} from "../db/transactionService";
+import { findUserById } from "../db/userService";
 
 
 // format the goal data in a neater way
@@ -105,7 +106,7 @@ export const editGoalController = async (req: Request, res: Response) => {
 
     //make sure that the balance is greater than the amount being spent on the goals
     if (amountDiff < 0) {
-      const user = await User.findById(existingGoal.user);
+      const user = await findUserById(id);
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }

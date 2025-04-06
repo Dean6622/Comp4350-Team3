@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import User from "../../db/userDB";
-import { addUser, getAllUsers, getUsersByUsername, editUser, deleteUser } from "../../db/userService";
+import { addUser, getAllUsers, getUsersByUsername, editUser, deleteUser, findUserById } from "../../db/userService";
 
 beforeEach(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
@@ -159,6 +159,34 @@ describe("User Service Tests", () => {
     test("should throw error when deleting with invalid ID format", async () => {
       await expect(deleteUser("invalidID"))
         .rejects.toThrow("Invalid user ID");
+    });
+  });
+  // Find User By ID Tests
+  describe("Find User By ID Tests", () => {
+    test("should find user by valid ID", async () => {
+      const user = await findUserById(existingUserId);
+      expect(user).not.toBeNull();
+      expect(user?._id.toString()).toBe(existingUserId);
+      expect(user?.username).toBe("testUser");
+    });
+
+    test("should return null for non-existent user ID", async () => {
+      const fakeId = new mongoose.Types.ObjectId().toString();
+      const user = await findUserById(fakeId);
+      expect(user).toBeNull();
+    });
+
+    test("should throw error for invalid ID format", async () => {
+      await expect(findUserById("invalidID"))
+        .rejects.toThrow("Invalid user ID format");
+    });
+
+    test("should handle database errors", async () => {
+      const mockError = new Error("Database connection failed");
+      jest.spyOn(User, "findById").mockRejectedValueOnce(mockError);
+
+      await expect(findUserById(existingUserId)).rejects.toThrow(mockError);
+      // Removed the console.error expectation since the function doesn't log errors
     });
   });
 });
