@@ -112,6 +112,22 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
       throw new Error("User does not exist.");
     }
 
+    // Calculate potential balance after changes
+    const newAmount = amount ?? updatedTransaction.amount;
+    const newType = type ?? updatedTransaction.type;
+
+    // Check for saving to spending
+    if (updatedTransaction.type === "Saving" && newType === "Spending") {
+      const potentialBalance = user.balance - updatedTransaction.amount  - newAmount;          
+      
+      if (potentialBalance < 0) {
+        throw new Error(
+          `Cannot switch from Saving to Spending, would result in negative balance`
+        );
+      }
+    }
+
+
     // Reverse the effect of the old transaction on the balance
     if (updatedTransaction.type === "Spending") {
       user.balance += updatedTransaction.amount; // Refund spending
@@ -182,7 +198,6 @@ export const editTransaction = async (id: string, name?: string, date?: string, 
   }
 };
 
-
 // Delete by entering just the id in the body
 export const deleteTransaction = async (id: string) => {
   try {
@@ -201,6 +216,17 @@ export const deleteTransaction = async (id: string) => {
     if (!user) {
       throw new Error("User not found.");
     }
+
+    // Check if deleting a savings transaction would result in negative balance
+    if (transaction.type === "Saving" && user.balance < transaction.amount) {
+      throw new Error("Cannot delete savings transaction - would result in negative balance");
+    }
+
+     // Check if deleting a savings transaction would result in negative balance
+    if (transaction.type === "Saving" && user.balance < transaction.amount) {
+      throw new Error("Cannot delete savings transaction - would result in negative balance");
+    }
+
     // reverse transaction effect on user balance
     if (transaction.type === "Spending") {
       user.balance += transaction.amount;
