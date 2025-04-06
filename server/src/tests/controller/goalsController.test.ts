@@ -11,7 +11,17 @@ jest.mock("../../db/goalsService", () => ({
   getAllGoals: jest.fn(),
   editGoal: jest.fn(),
   deleteGoal: jest.fn(),
-  findGoalById: jest.fn(),
+  findGoalById: jest.fn().mockImplementation((id) => {
+    return id === "goal123" ? Promise.resolve({
+      _id: "goal123",
+      user: "user123",
+      name: "Save Money",
+      time: "2025-02-17T12:00:00Z",
+      currAmount: 50,
+      goalAmount: 100,
+      category: "Finance",
+    }) : Promise.resolve(null);
+  }),
 }));
 
 
@@ -198,6 +208,13 @@ describe("Goal Controller", () => {
 
 
   describe("editGoalController", () => {
+    beforeEach(() => {
+      // Reset the mock implementation before each test
+      (findGoalById as jest.Mock).mockImplementation((id) => {
+        return id === "goal123" ? Promise.resolve(fakeGoal) : Promise.resolve(null);
+      });
+    });
+
     it("should update a goal successfully", async () => {
       const updatedGoal = {
         _id: "goal123",
