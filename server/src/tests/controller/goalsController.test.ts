@@ -4,6 +4,7 @@ import express from "express";
 import {addGoal, getAllGoals, editGoal, deleteGoal} from "../../db/goalsService";
 import {addGoalController, getAllGoalsController, editGoalController, deleteGoalController} from "../../controller/goalsController";
 import {addTransaction} from "../../db/transactionService";
+import { findUserById } from "../../db/userService";
 
 jest.mock("../../db/goalsService", () => ({
   addGoal: jest.fn(),
@@ -278,6 +279,68 @@ describe("Goal Controller", () => {
         "Saving",
       );
     });
+
+    it("should return 500 if user has insufficient funds when completing goal", async () => {
+      const completedGoal = {
+        _id: "goal123",
+        user: "user123",
+        name: "Emergency Fund",
+        time: "2025-12-31T12:00:00Z",
+        currAmount: 500,
+        goalAmount: 500,
+        category: "Finance",
+      };
+    
+      (editGoal as jest.Mock).mockResolvedValue(completedGoal);
+    
+      // 👇 Override the mock for this specific test
+      (findUserById as jest.Mock).mockResolvedValueOnce({
+        _id: "user123",
+        username: "testuser",
+        balance: 100, // 👈 Insufficient
+        save: jest.fn().mockResolvedValue(true),
+      });
+    
+      const response = await request(app).put("/api/goal/goal123").send({
+        name: "Emergency Fund",
+        time: "2025-12-31T12:00:00Z",
+        currAmount: 500,
+        goalAmount: 500,
+        category: "Finance",
+      });
+    
+      expect(response.status).toBe(500);
+      expect(response.body.error).toBe("Insufficient funds to complete goal");
+    });
+
+    it("should return 500 if user is not found when completing goal", async () => {
+      const completedGoal = {
+        _id: "goal123",
+        user: "user123",
+        name: "Trip Fund",
+        time: "2025-12-31T12:00:00Z",
+        currAmount: 500,
+        goalAmount: 500,
+        category: "Finance",
+      };
+    
+      (editGoal as jest.Mock).mockResolvedValue(completedGoal);
+    
+      // 👇 Simulate user not found
+      (findUserById as jest.Mock).mockResolvedValueOnce(null);
+    
+      const response = await request(app).put("/api/goal/goal123").send({
+        name: "Trip Fund",
+        time: "2025-12-31T12:00:00Z",
+        currAmount: 500,
+        goalAmount: 500,
+        category: "Finance",
+      });
+    
+      expect(response.status).toBe(500);
+      expect(response.body.error).toBe("User not found");
+    });
+    
   });
 
   describe("deleteGoalController", () => {
