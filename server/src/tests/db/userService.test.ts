@@ -69,6 +69,13 @@ describe("User Service Tests", () => {
     expect(users.length).toBe(1);
   });
 
+  test("should update password when provided", async () => {
+    const updatedUser = await editUser(existingUserId, undefined, "newPassword123");
+    expect(updatedUser).not.toBeNull();
+    expect(updatedUser?.password).toBe("newPassword123");
+  });
+  
+  
   // Get Users Tests
   describe("Get Users Tests", () => {
     test("should get all users", async () => {

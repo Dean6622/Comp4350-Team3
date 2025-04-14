@@ -5,6 +5,7 @@ import Tag from "../../db/tagDB";
 import Transaction from "../../db/transactionDB";
 import {addTransaction, getAllTransactions, editTransaction, deleteTransaction} from "../../db/transactionService";
 
+
 // Test settings assisted by AI
 beforeEach(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});

@@ -131,6 +131,28 @@ describe("Goals Service Tests", () => {
       expect(updatedGoal?.currAmount).toBe(300);
       expect(updatedGoal?.goalAmount).toBe(800);
     });
+
+    test("should throw error if user has insufficient funds when goal is completed", async () => {
+      // Create user with low balance
+      const lowBalanceUser = await addUser("lowBalanceUser", "pass", 100); // only 100 balance
+      const lowUserId = lowBalanceUser._id.toString();
+    
+      // Add a goal that will reach completion
+      const goal = await addGoal(
+        lowUserId,
+        "Complete Expensive Goal",
+        "2025-12-31",
+        400,
+        500,
+        "Saving"
+      );
+    
+      // Try to update currAmount to match goalAmount (500), but user has only 100
+      await expect(
+        editGoal(goal._id.toString(), undefined, undefined, 500)
+      ).rejects.toThrow("Insufficient funds to complete goal");
+    });
+    
   });
 
   // Delete Goal tests
